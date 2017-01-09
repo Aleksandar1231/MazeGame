@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Patrol : MonoBehaviour {
+
+
+	public Vector3 Velocity;
+	public Vector3 MoveDirection;
+	public Vector3 Target;
+	public bool doPatrol = true;
+	public Transform[] patrolPoints;
+	public float speed;
+	private int currentPoint;
+	public Rigidbody rb;
+
+	// Use this for initialization
+	void Start () {
+		rb = GetComponent<Rigidbody>();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (currentPoint < patrolPoints.Length) {
+			Target = patrolPoints [currentPoint].position;
+			MoveDirection = Target - transform.position;
+			Velocity = rb.velocity;
+
+
+			if (MoveDirection.magnitude < 1) {
+				currentPoint++;
+			} else {
+				Velocity = MoveDirection.normalized * speed;
+			}
+		} else {
+			if (doPatrol) {
+				currentPoint = 0;
+			} else {
+				Velocity = Vector3.zero;
+			}
+		}
+		rb.velocity = Velocity;
+		transform.LookAt (Target);
+
+		}
+
+		
+	}	
